@@ -25,11 +25,19 @@ const SignupMethod = ({
         });
       if (type === 'success') {
         // Get the user's name using Facebook's Graph API
-        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-        const name = response.json().name;
-        navigation.navigate("HomePage");
-      } else {
-        // type === 'cancel'
+        signInWithCustomToken(auth, token)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+          const name = response.json().name;
+          navigation.navigate("HomePage");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ...
+        });
       }
     } catch ({
         message
